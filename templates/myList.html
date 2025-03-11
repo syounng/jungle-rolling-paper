@@ -1,1 +1,135 @@
-<!--나의 롤링페이퍼 화면-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나에게 남긴 메모</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            scrollbar-width: none;
+            height: 100%;
+        }
+        .wrap {
+            background-color: #D9D9D9;
+            width: 100vw;
+            min-height: 100vh;
+            padding: 50px;
+            text-align: center;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-title {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        .memo-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%;
+            margin-top: 30px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .memo-list {
+            margin-top: 20px;
+        }
+        .card {
+            padding: 15px;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .nickname-input {
+            margin-top: 10px;
+        }
+        .result-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="title">
+            <span class="main-title">{{ to_id }} 님의 무기창고</span>
+        </div>
+        <h3>익명의 정글러가 남기고 간 메시지를 읽어보세요 👀</h3>
+
+        <!-- ✅ 받은 메모 목록 -->
+        <div class="container mt-4">
+            <div class="row g-4" id="memoList">
+                <!-- 메모가 동적으로 추가됨 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            let access_token = localStorage.getItem("access_token");
+
+            // ✅ 내가 받은 메모 가져오기
+            function loadMyMemos() {
+                $.ajax({
+                    type: "GET",
+                    url: "/memos/me",
+                    headers: { "Authorization": "Bearer " + access_token },
+                    success: function (response) {
+                        let memos = response.memos;
+                        $("#memoList").empty();
+
+                        memos.forEach((memo, index) => {
+                            let memoCard = `
+                                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p>누가 남긴 메모일까요?🤔</p>
+                                            <div class="mb-2 memo-content"><strong>${memo.content}</strong></div>
+                                            
+                                            <input type="text" class="form-control nickname-input" placeholder="닉네임을 입력하세요">
+                                            <button class="btn btn-primary mt-2 guess-btn" data-index="${index}">맞추기</button>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            $("#memoList").append(memoCard);
+                        });
+
+                        // ✅ 맞추기 버튼 클릭 이벤트
+                        //  대대적인 수정이 필요함
+                        $(".guess-btn").click(function () {
+                            let index = $(this).data("index");
+                            let inputNickname = $(this).siblings(".nickname-input").val().trim();
+                            let correctNickname = memos[index].nickname;
+                            let cardBody = $(this).parent(); // 현재 클릭한 카드의 .card-body
+                            
+                            if (inputNickname === correctNickname) {
+                                // ✅ 정답일 경우
+                                cardBody.html(`
+                                    <p><strong>${correctNickname}</strong> 님의 본명을 잡았습니다!</p>
+                                    <div class="result-text text-success">🎉 본명을 잡았습니다!</div>
+                                `);
+                            } else {
+                                // ❌ 오답일 경우
+                                cardBody.html(`
+                                    <p><strong>${correctNickname}</strong> 님의 닉네임을 놓쳤습니다.</p>
+                                    <div class="result-text text-danger">❌ 닉네임을 놓쳤습니다.</div>
+                                `);
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert("메모를 불러올 수 없습니다.");
+                    }
+                });
+            }
+
+            loadMyMemos();  // 페이지 로드 시 메모 불러오기
+        });
+    </script>
+</body>
+</html>

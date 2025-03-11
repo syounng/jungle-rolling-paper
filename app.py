@@ -4,6 +4,8 @@ from flask_jwt_extended import JWTManager, create_access_token, create_refresh_t
 from auth import bp
 from database import db
 
+
+
 app = Flask(__name__)
 
 #secretkey 설정
