@@ -57,7 +57,7 @@
 <body>
     <script>
         function login(){
-            console.log('login()')
+
             id = $('#id').val();
             pwd = $('#pwd').val();
             $.ajax({
@@ -67,8 +67,11 @@
                 success: function(response) {
                     if(response['result'] == 'success'){
                         console.log('success');
-                        console.log(response['access_token']);
-                        console.log(response['refresh_token']);
+                        // console.log(response['access_token']);
+                        // console.log(response['refresh_token']);
+
+                        // $.cookie('access_token', response['access_token'], {path: '/'});
+                        
                     }
                     else{
                         console.log('no token here');
