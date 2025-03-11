@@ -1,11 +1,18 @@
 from flask import Flask, render_template
 from pymongo import MongoClient
-
-client = MongoClient('localhost', 27017)
-db = client.jungle9
-
+from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token
+from auth import bp
+from database import db
 
 app = Flask(__name__)
+
+#secretkey 설정
+app.config['JWT_SECRET_KEY'] = 'secret_key'
+jwt = JWTManager(app)
+
+#블루프린트 등록
+app.register_blueprint(bp, url_prefix='/auth')
+
 
 db.users.insert_one({'name': '정권호', 'id':'jkh1447@gmail.com', 'pwd':'asdf1234', 'likes': 0, 'photo':'none'})
 db.users.insert_one({'name': '김대원', 'id': 'kdanny99naver.com@gmail.com', 'pwd':'asdf1234', 'likes':0, 'photo':'none'})
