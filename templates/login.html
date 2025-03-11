@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <style>
         .wrap {
             background-color: #D9D9D9;
@@ -54,12 +55,36 @@
     </style>
 </head>
 <body>
+    <script>
+        function login(){
+            console.log('login()')
+            id = $('#id').val();
+            pwd = $('#pwd').val();
+            $.ajax({
+                type:"POST",
+                url:"/auth/login",
+                data:{'id': id, 'pwd': pwd},
+                success: function(response) {
+                    if(response['result'] == 'success'){
+                        console.log('success');
+                        console.log(response['access_token']);
+                        console.log(response['refresh_token']);
+                    }
+                    else{
+                        console.log('no token here');
+                    }
+                }
+
+
+            })
+        }
+    </script>
     <div class="wrap">
             <h2>로그인</h2>
             <form>
                 <input id="id" type="text" placeholder="아이디" required>
-                <input type="password" placeholder="비밀번호" required>
-                <button type="submit" class="login_button">로그인</button>
+                <input id="pwd" type="password" placeholder="비밀번호" required>
+                <button onclick="login()" type="submit" class="login_button">로그인</button>
             </form>
             <button type="button" class="join_button">회원가입 👀</button>
     </div>

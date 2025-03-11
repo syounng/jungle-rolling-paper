@@ -14,14 +14,10 @@ jwt = JWTManager(app)
 app.register_blueprint(bp, url_prefix='/auth')
 
 
-db.users.insert_one({'name': '정권호', 'id':'jkh1447@gmail.com', 'pwd':'asdf1234', 'likes': 0, 'photo':'none'})
-db.users.insert_one({'name': '김대원', 'id': 'kdanny99naver.com@gmail.com', 'pwd':'asdf1234', 'likes':0, 'photo':'none'})
-db.memos.insert_one({'id':'jkh1447@gmail.com', 'receiver': 'jkh1447@gmail.com', 'nickname':'abc', 'content':'화이팅!'})
-
 @app.route('/')
 def home():
    users = db.users.find()
-   return render_template('main.html', users = users)
+   return render_template('login.html', users = users)
 
 @app.route('/login')
 def login():
@@ -29,6 +25,6 @@ def login():
 
 
 if __name__ == '__main__':  
-   app.run('0.0.0.0', port=5001, debug=True)
+   app.run('0.0.0.0', port=5000, debug=True)
 
 
