@@ -9,12 +9,14 @@ jwt = JWTManager()
 
 @bp.route('/login', methods=['POST'])
 def login():
+
     id = request.form.get('id')
     pwd = request.form.get('pwd')
 
     user = db.users.find_one({'id': id, 'pwd': pwd}) #일치하는 유저 찾기
     if user:
         #맞았을때, 토큰발행
+
         access_token = create_access_token(identity=id)
         refresh_token = create_refresh_token(identity=id)
         return jsonify(result = 'success', access_token=access_token, refresh_token=refresh_token)
