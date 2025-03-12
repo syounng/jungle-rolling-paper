@@ -75,17 +75,13 @@
 
     <script>
         $(document).ready(function () {
-            // 문제가 있을 가능성이 있다.
-            let to_id = "{{ to_id }}";
-            let access_token = localStorage.getItem("access_token");
+            let to_id = "{{ to_id }}";  // Flask에서 전달된 to_id 값
 
             // ✅ 특정 동료의 메모 가져오기
             function loadMemos() {
                 $.ajax({
                     type: "GET",
-                    // 문제가 있을 가능성이 있다.
                     url: `/memos/${to_id}`,
-                    headers: { "Authorization": "Bearer " + access_token },
                     success: function (response) {
                         let memos = response.memos;
                         $("#memoList").empty();
@@ -113,7 +109,7 @@
 
             // ✅ 메모 등록
             $("#sendMemo").click(function () {
-                let nickname = $("#nickname").val();
+                let nickname = $("#nickname").val() || "익명";  // 기본값 설정
                 let content = $("#content").val();
 
                 if (!content.trim()) {
@@ -125,7 +121,6 @@
                     type: "POST",
                     url: "/regist/memo",
                     contentType: "application/json",
-                    headers: { "Authorization": "Bearer " + access_token },
                     data: JSON.stringify({ to_id, nickname, content }),
                     success: function () {
                         alert("메모가 등록되었습니다!");
@@ -140,4 +135,3 @@
     </script>
 </body>
 </html>
-
