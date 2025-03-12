@@ -63,6 +63,14 @@ def join_confirm():
     # 회원가입 성공 반환
     return jsonify(result = 'success', message='회원가입이 완료되었습니다.')
     
+    
+@app.route('/mypage', methods=['GET'])
+@jwt_required()
+def mypage():
+    current_user = get_jwt_identity()
+    user_name = db.users.find_one({'id': current_user}, {'_id': False})['name'] # db에서 사용자 이름 가져오기
+    return render_template('myPage.html', user_name=user_name)
+
 
 
 @app.route('/mainpage', methods=['GET'])
