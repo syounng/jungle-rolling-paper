@@ -67,8 +67,7 @@
                 success: function(response) {
                     if(response['result'] == 'success'){
                         console.log('success');
-                        console.log(response['access_token']);
-                        console.log(response['refresh_token']);
+                        window.location.href = "/mainpage";
                     }
                     else{
                         console.log('no token here');
