@@ -22,7 +22,7 @@ app.register_blueprint(mymemo_bp)
 
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
    return render_template('login.html')
 
@@ -36,7 +36,7 @@ def join_confirm():
     
     name = request.form.get('name')
     id = request.form.get('id')
-    pw = request.form.get('pw')
+    pwd = request.form.get('pwd')
 
     id_is_exists = db.users.find_one({'id': id})
     print('아이디 중복 찾기 완료')
@@ -52,7 +52,7 @@ def join_confirm():
     new_user = {
         'name': name,
         'id': id,
-        'pw': pw,
+        'pwd': pwd,
         'likes' : 0,
         'photo' : None
     }
