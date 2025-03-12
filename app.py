@@ -67,10 +67,43 @@ def join_confirm():
 @app.route('/mypage', methods=['GET'])
 @jwt_required()
 def mypage():
-    current_user_id = get_jwt_identity()
-    user_name = db.users.find_one({'id': current_user_id}, {'_id': False})['name'] # db에서 사용자 이름 가져오기
-    memos_count = db.memos.count_documents({'_id': current_user_id})
     
+   #  dummy_data = [
+   #    {
+   #       "from_id": "kdw0000",
+   #       "to_id": "syj0522",
+   #       "nickname": "nickname1",
+   #       "content": "This is content 1.",
+   #       "name": "김대원",
+   #       "quiz": "false"
+   #    },
+   #    {
+   #       "from_id": "syj0522",
+   #       "to_id": "kdw0000",
+   #       "nickname": "nickname2",
+   #       "content": "This is content 2.",
+   #       "name": "정소영",
+   #       "quiz": "true"
+   #    },
+   #    {
+   #       "from_id": "jkh0000",
+   #       "to_id": "syj0522",
+   #       "nickname": "nickname3",
+   #       "content": "This is content 3.",
+   #       "name": "정권호",
+   #       "quiz": "default"
+   #    }
+   # ]
+
+   #  # 데이터 삽입
+   #  db.memos.insert_many(dummy_data)
+
+
+    current_user_id = get_jwt_identity()
+    print('current_user_id: ' + current_user_id)
+    user_name = db.users.find_one({'id': current_user_id}, {'_id': False})['name'] # db에서 사용자 이름 가져오기
+    print('user_name: ' + user_name)
+    memos_count = db.memos.count_documents({'_id': current_user_id})
     return render_template('myPage.html', user_name=user_name, memos_count=memos_count)
 
 
