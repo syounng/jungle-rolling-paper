@@ -38,7 +38,7 @@
             background-color: #ffffff; /* 원의 색상 */
             border-radius: 50%; /* 둥글게 만들어 원 모양 */
             cursor: pointer;
-            background-image: url('{{ url_for("static", filename="default-profile.png") }}');  /* 기본 이미지 설정 */
+            
             background-size: cover; /* 이미지를 div 크기에 맞게 조정 */
             background-position: center; /* 이미지를 div 안에서 중앙 정렬 */
         }
@@ -89,7 +89,7 @@
             <span class="main-title bagel-fat-one-regular">🌳정글 306호에 사는 사람들⚔</span>
             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
             <div class="profile">
-                <div class="circle" id="mypage" onclick="goMypage()"></div>
+                <img src="/get-profile-picture/{{current_user}}" id="mypage" onclick="goMypage()" style="width: 100px; height: 100px; border-radius: 50%; cursor: pointer;"></img>
                 <div class="name">{{current_user}}</div>
             </div>
         </div>

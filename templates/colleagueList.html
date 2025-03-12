@@ -53,18 +53,20 @@
             font-weight: 400;
             font-style: normal;
         }
-        .message-title {
-            font-size: large;
+        .back-btn {
+           font-size: 24px;  /* 버튼 크기 키우기 */
+           padding: 10px 20px;
+           border-radius: 10px;
+           position: absolute;
+           left: 180px; /* 조금만 오른쪽으로 조정 */
         }
-        .message-body {
-            font-size: large;
-        }
-        
+
     </style>
 </head>
 <body>
     <div class="wrap">
         <div class="title">
+            <button class="btn btn-light back-btn">←</button>
             <span class="main-title bagel-fat-one-regular">{{ to_id }} 님을 위한 한마디</span>
         </div>
         <span class="sub-title bagel-fat-one-regular">🔥개발자의 정글에서 동료를 살릴 한마디를 건네보세요!</span>
@@ -90,7 +92,9 @@
 
         $(document).ready(function () {
             let to_id = "{{ to_id }}";  // Flask에서 전달된 to_id 값
-
+            $(".back-btn").click(function () {
+                window.history.back();
+            });
             // ✅ 특정 동료의 메모 가져오기
             function loadMemos() {
                 $.ajax({
