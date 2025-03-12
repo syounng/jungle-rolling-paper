@@ -97,7 +97,7 @@
                          <input id="pw-check" type="password" placeholder="비밀번호 확인">
                          <i class="pw_eye fa fa-eye-slash"></i> 
                      </div>
-                     <button type="submit" class="login_button" onclick="checkValidation(event)">완료</button>
+                     <button type="submit" class="login_button" onclick="checkValidation(event); join()">완료</button>
                  </form>
          </div> 
      </div>
@@ -170,7 +170,7 @@
  });
  
  // 클라이언트의 회원가입 요청 로직
- function login(){
+ function join(){
  
              name = $('#name').val();
              id = $('#id').val();
@@ -178,17 +178,14 @@
  
              $.ajax({
                  type:"POST",
-                 url:"/auth/join",
+                 url:"/join",
                  data:{'name': name, 'id': id, 'pw': pw},
                  success: function(response) {
                      if(response['result'] == 'success'){
-                         console.log('success');
-                         console.log(response['name']);
-                         console.log(response['id']);
-                         console.log(response['pw']);
-                     }
-                     else{
-                         console.log('회원가입 실패');
+                        alert(response['message']); //회원가입 완료 메시지
+                        window.history.back(); //로그인 페이지로 리다이렉트
+                     } else{
+                        alert(response['message']); //회원가입 실패 메시지 (아이디 중복)
                      }
                  }
  
