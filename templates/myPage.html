@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>jungleRollingpaper</title>
     <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Gasoek+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet">    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         html, body {
             margin: 0;
@@ -65,6 +69,16 @@
         .pic-btn {
             border: 1px;
         }
+        .bagel-fat-one-regular {
+            font-family: "Bagel Fat One", system-ui;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .orbit-regular {
+            font-family: "Orbit", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
     </style>
 </head>
 <body>
@@ -76,14 +90,19 @@
         <br><br>
         <div class="mypage">
             <div class="mypage-left">
-                <div class="profile-image"></div>
-                <button class="pic-btn">사진 찾아보기</button>
-                <button class="pic-btn">수정</button>
+                <form class="mypage-left" id="uploadForm">
+
+                    <img  id="preview" src="/get-profile-picture/{{ user_name }}" style="max-width: 200px;">
+                    <button type="button" class="orbit-regular" id="uploadButton">찾아보기</button>
+                    <input type="file" id="profilePicture" name="profilePicture" accept="image/*" style="display: none;">
+                    <button type="submit" class="orbit-regular">수정</button>
+
+                </form>
             </div>
             <div class="mypage-right">
-                <h>이름: {{user_name}}</h>
-                <h>나의 무기 개수: {{memos_count}}</h>
-                <button type="button" class="to-my-list-btn" onclick="toMyList()">나의 무기창고 바로가기 🔥</button>
+                <h class="orbit-regular">이름: {{user_name}}</h>
+                <h class="orbit-regular">나의 무기 개수: {{memos_count}}</h>
+                <button type="button" class="to-my-list-btn orbit-regular" onclick="toMyList()">나의 무기창고 바로가기 🔥</button>
             </div>
             
         </div>
@@ -92,6 +111,40 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </div>
     <script>
+        $('#uploadButton').click(function() {
+  
+        $('#profilePicture').click();  // hidden file input 클릭
+        });
+
+        $('#profilePicture').change(function(e) {
+        let reader = new FileReader();
+        reader.onload = function(event) {
+            $('#preview').attr('src', event.target.result).show();
+        }
+        reader.readAsDataURL(e.target.files[0]);
+        });
+
+        $('#uploadForm').submit(function(e) {
+        e.preventDefault();
+
+        let formData = new FormData();
+        formData.append('profilePicture', $('#profilePicture')[0].files[0]);
+        formData.append('user_name', '{{user_name}}');
+
+        $.ajax({
+            url: '/upload-profile-picture', // 서버에 업로드 요청을 보낼 URL
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                alert('Upload successful!');
+            },
+            error: function(xhr, status, error) {
+                alert('Upload failed!');
+            }
+        });
+        });
         function toMyList(){
             window.location.href = "/mymemo/rollingpaper/me";
             console.log('고마이리스트');

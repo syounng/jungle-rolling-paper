@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify
+from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify, Response
 from pymongo import MongoClient
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from auth import bp
@@ -6,8 +6,11 @@ from database import db
 from blueprints.collmemo import bp_callmemo  # collmemo Blueprint 가져오기
 from blueprints.mymemo import mymemo_bp #mymemo Blueprint 가져오기
 from blueprints.signup import bp_signup
+from blueprints.upload import bp_upload
+from bson import ObjectId
+import gridfs
 
-
+fs = gridfs.GridFS(db)
 app = Flask(__name__)
 
 #secretkey 설정
@@ -22,7 +25,7 @@ app.register_blueprint(bp, url_prefix='/auth')
 app.register_blueprint(bp_callmemo, url_prefix='/memo')
 app.register_blueprint(mymemo_bp, url_prefix='/mymemo')
 app.register_blueprint(bp_signup)
-
+app.register_blueprint(bp_upload)
 
 #db.memos.insert_one({'from_id': 'kdanny99naver.com@gmail.com', 'to_id':'jkh1447@gmail.com', 'nickname':'adb', 'content': 'ewfeca', 'name': '김대원', 'quiz': 'default'})
 
@@ -110,13 +113,27 @@ def mypage():
     return render_template('myPage.html', user_name=user_name, memos_count=memos_count)
 
 
+@app.route('/get-profile-picture/<user_name>')
+def get_profile_picture(user_name):
+   user = db.users.find_one({'name': user_name})
+   if not user or 'photo' not in user:
+        return jsonify({"error": "User or profile picture not found"}), 404
+
+   file_id = user['photo']
+
+   try:
+        file = fs.get(ObjectId(file_id))
+        return Response(file.read(), mimetype='image/png')  # MIME 타입을 맞춰서 반환
+   except Exception as e:
+      return jsonify({"error": str(e)}), 500
+    
 
 @app.route('/mainpage', methods=['GET'])
 @jwt_required()
 def mainpage():
 #    token_receive = request.cookies.get('access_token')
    current_user = get_jwt_identity()
-   users = db.users.find({}, {'_id':False})
+   users = db.users.find({}, {'_id':False, 'photo':False})
    current_user = db.users.find_one({'id': current_user})['name']
 
    return render_template('main.html', users = users, current_user = current_user)
