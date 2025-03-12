@@ -6,9 +6,6 @@
     <title>내가 받은 메모</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Gasoek+One&display=swap" rel="stylesheet">
     <style>
         html, body {
             margin: 0;
@@ -27,109 +24,128 @@
             flex-direction: column;
         }
         .main-title {
-            font-size: 50px;
-            margin-bottom: 20px;
+            font-size:80px;
+        }
+        .sub-title {
+            font-size:40px;
         }
         .memo-container {
-            background-color: #ffffff;
+            background-color: #FFFFFF;
             padding: 20px;
             border-radius: 10px;
             width: 60%;
             margin-top: 30px;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .memo-list {
-            margin-top: 20px;
-        }
-        .card {
-            padding: 15px;
-            text-align: center;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            min-height: 220px; /* 카드 높이 유지 */
-        }
-        .nickname-input, .guess-btn {
-            margin-top: 10px;
-        }
         .hidden {
-            visibility: hidden; /* 요소를 숨기되 공간은 유지 */
+            display: none;
         }
+        /* :흰색_확인_표시: 카드 크기 유지 */
+        .card {
+            min-height: 250px; /* 카드의 최소 높이 설정 */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        /* :흰색_확인_표시: 텍스트 변경 시 크기 유지 */
         .result-text {
+            min-height: 24px; /* 결과 텍스트 영역의 최소 높이 설정 */
             font-size: 18px;
             font-weight: bold;
             margin-top: 10px;
-            min-height: 24px; /* 결과 텍스트 영역 유지 */
         }
-        .bagel-fat-one-regular {
-            font-family: "Bagel Fat One", system-ui;
-            font-weight: 400;
-            font-style: normal;
+        .title-container {
+           width: 100%;
+           display: flex;
+           align-items: center;
+           justify-content: center; /* 제목을 중앙 정렬 */
+           position: relative;
+        }
+        .back-btn {
+           font-size: 24px;  /* 버튼 크기 키우기 */
+           padding: 10px 20px;
+           border-radius: 10px;
+           position: absolute;
+           left: 180px; /* 조금만 오른쪽으로 조정 */
         }
     </style>
 </head>
 <body>
     <div class="wrap">
         <div class="title">
-            <span class="main-title bagel-fat-one-regular">{{ to_id }} 님의 무기창고</span>
+            <button class="btn btn-light back-btn">←</button>
+            <span class="main-title">{{ to_id }} 님의 무기창고</span>
         </div>
-        <h3 class="bagel-fat-one-regular">익명의 정글러가 남긴 메시지를 확인해 보세요 👀</h3>
-
-        <!-- ✅ 받은 메모 목록 -->
+        <span class="sub-title">익명의 정글러가 남긴 메시지를 확인해 보세요 :두_눈:</span>
         <div class="container mt-4">
             <div class="row g-4" id="memoList">
                 <!-- 메모가 동적으로 추가됨 -->
             </div>
         </div>
     </div>
-
     <script>
         $(document).ready(function () {
-            let to_id = "{{ to_id }}";  // Flask에서 전달된 to_id 값
-
-            // ✅ 내가 받은 메모 가져오기
+            let to_id = "{{ to_id }}";
+            $(".back-btn").click(function () {
+                window.history.back();
+            });
             function loadMyMemos() {
                 $.ajax({
                     type: "GET",
                     url: `/mymemo/memos/me/${to_id}`,
                     success: function (response) {
-                        let memos = response.memos;
+                        window.memos = response.memos;
                         $("#memoList").empty();
-
                         memos.forEach((memo, index) => {
-                            let memoCard = `
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                                    <div class="card">
-                                        <div class="card-body" id="memo-${index}">
-                                            <p>✉️ <strong>${memo.nickname}</strong> 님의 메시지</p>
-                                            <div class="mb-2 memo-content"><strong>${memo.content}</strong></div>
-
-                                            <!-- ✅ 입력칸, 버튼, 결과 텍스트 -->
-                                            <input type="text" class="form-control nickname-input" placeholder="본명을 입력하세요">
-                                            <button class="btn btn-primary mt-2 guess-btn" data-index="${index}">맞추기</button>
-                                            <div class="result-text mt-2"></div>
+           
+                            if(memo.quiz === 'correct'){
+                                let memoCard = `
+                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                                        <div class="card">
+                                            <div class="card-body" id="memo-${index}">
+                                                <p><strong>${memo.nickname}</strong> 님의 메시지</p>
+                                                <div class="mb-2 memo-content"><strong>${memo.content}</strong></div>
+                                                <span class="text-success"><strong>${memo.name} 님을 잡았습니다! :짠:</strong></span>
+                                                <div class="result-text mt-2"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>`;
-                            $("#memoList").append(memoCard);
-                        });
-
-                        // ✅ 본명 맞추기 기능
-                        $(".guess-btn").click(function () {
-                            let index = $(this).data("index");
-                            let inputName = $(this).siblings(".nickname-input").val().trim();
-                            let correctNickname = memos[index].nickname;
-                            let memoDiv = $(`#memo-${index}`);
-                            let resultText = memoDiv.find(".result-text");
-
-                            // 입력칸과 버튼 숨기기 (공간 유지)
-                            $(this).siblings(".nickname-input").addClass("hidden");
-                            $(this).addClass("hidden");
-
-                            if (inputName === correctNickname) {
-                                // ✅ 정답일 경우 메시지 추가
-                                resultText.html(`<span class="text-success"><strong>${correctNickname}</strong> 님을 잡았습니다! 🎉</span>`);
-                            } else {
-                                // ❌ 오답일 경우 메시지 추가
-                                resultText.html(`<span class="text-danger"><strong>${correctNickname}</strong> 님을 놓쳤습니다... ❌</span>`);
+                                    </div>`;
+                                $("#memoList").append(memoCard);
+                            }
+                            else if (memo.quiz === 'wrong'){
+                                let memoCard = `
+                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                                        <div class="card">
+                                            <div class="card-body" id="memo-${index}">
+                                                <p><strong>${memo.nickname}</strong> 님의 메시지</p>
+                                                <div class="mb-2 memo-content"><strong>${memo.content}</strong></div>
+                                                <span class="text-danger"><strong>${memo.nickname} 님을 놓쳤습니다... :x:</strong></span>
+                                                <div class="result-text mt-2"></div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                                $("#memoList").append(memoCard);
+                            }
+                            else {
+                                let memoCard = `
+                                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                                        <div class="card">
+                                            <div class="card-body" id="memo-${index}">
+                                                <p><strong>${memo.nickname}</strong> 님의 메시지</p>
+                                                <div class="mb-2 memo-content"><strong>${memo.content}</strong></div>
+                                                <input type="text" class="form-control nickname-input" placeholder="본명을 입력하세요">
+                                                <button class="btn btn-primary mt-2 guess-btn" data-index="${index}">맞추기</button>
+                                                <div class="result-text mt-2"></div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                                $("#memoList").append(memoCard);
                             }
                         });
                     },
@@ -138,8 +154,42 @@
                     }
                 });
             }
+            loadMyMemos();
+            $(document).on("click", ".guess-btn", function () {
+                let index = $(this).data("index");
+                let inputName = $(this).siblings(".nickname-input").val().trim();
+                if (!memos[index]) {
+                    alert("데이터를 불러오는 중 오류가 발생했습니다.");
+                    return;
+                }
+                let correctName = memos[index].name;
+                let nickname = memos[index].nickname;
+                let memoDiv = $(`#memo-${index}`);
+                let resultText = memoDiv.find(".result-text");
+                let quizResult = inputName === correctName ? "correct" : "wrong";
+                let message = quizResult === "correct"
+                    ? `<span class="text-success"><strong>${correctName} 님을 잡았습니다! :짠:</strong></span>`
+                    : `<span class="text-danger"><strong>${nickname} 님을 놓쳤습니다... :x:</strong></span>`;
+                resultText.html(message);
+                memoDiv.find(".nickname-input").addClass("hidden");
+                memoDiv.find(".guess-btn").addClass("hidden");
 
-            loadMyMemos();  // 페이지 로드 시 메모 불러오기
+                if(quizResult === "correct") {
+                    //맞췄을때 quiz = correct로 update
+                    $.ajax({
+                        type:"POST",
+                        url: '/mymemo/updateQuizState',
+                        data: {'id': memos[index]._id, 'quizState': "correct"},
+                    })
+                }
+                else {
+                    $.ajax({
+                        type:"POST",
+                        url: '/mymemo/updateQuizState',
+                        data: {'id': memos[index]._id, 'quizState': "wrong"},
+                    })
+                }
+            });
         });
     </script>
 </body>
