@@ -23,7 +23,7 @@ app.register_blueprint(bp_signup)
 
 #db.memos.insert_one({'from_id': 'kdanny99naver.com@gmail.com', 'to_id':'jkh1447@gmail.com', 'nickname':'adb', 'content': 'ewfeca', 'name': '김대원', 'quiz': 'default'})
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
    return render_template('login.html')
 
@@ -37,7 +37,7 @@ def join_confirm():
     
     name = request.form.get('name')
     id = request.form.get('id')
-    pw = request.form.get('pw')
+    pwd = request.form.get('pwd')
 
     id_is_exists = db.users.find_one({'id': id})
     print('아이디 중복 찾기 완료')
@@ -53,7 +53,7 @@ def join_confirm():
     new_user = {
         'name': name,
         'id': id,
-        'pw': pw,
+        'pwd': pwd,
         'likes' : 0,
         'photo' : None
     }
