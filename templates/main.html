@@ -38,6 +38,9 @@
             background-color: #ffffff; /* 원의 색상 */
             border-radius: 50%; /* 둥글게 만들어 원 모양 */
             cursor: pointer;
+            background-image: url('{{ url_for("static", filename="default-profile.png") }}');  /* 기본 이미지 설정 */
+            background-size: cover; /* 이미지를 div 크기에 맞게 조정 */
+            background-position: center; /* 이미지를 div 안에서 중앙 정렬 */
         }
         .title {
             display: flex;
@@ -49,7 +52,7 @@
             flex-direction: column;
         }
         .name {
-            font-size:30px;
+            font-size:20px;
         }
         .card {
             height: 200px; /* 카드 높이 고정 */
@@ -64,11 +67,14 @@
             overflow: hidden;  /* 이미지가 네모 밖으로 나가지 않도록 설정 */
             background-color: #a1deab;
             cursor: pointer;
+        
         }
         .profile-bottom{
             text-align: center;
         }
-
+        .profile-name {
+            font-size: 7px;
+        }
 
     </style>
 </head>
