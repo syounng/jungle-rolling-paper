@@ -3,6 +3,8 @@ from pymongo import MongoClient
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from auth import bp
 from database import db
+from blueprints.collmemo import collmemo_bp  # collmemo Blueprint 가져오기
+from blueprints.mymemo import mymemo_bp #mymemo Blueprint 가져오기
 
 
 
@@ -15,6 +17,9 @@ jwt = JWTManager(app)
 
 #블루프린트 등록
 app.register_blueprint(bp, url_prefix='/auth')
+app.register_blueprint(collmemo_bp)
+app.register_blueprint(mymemo_bp)
+
 
 
 @app.route('/')
