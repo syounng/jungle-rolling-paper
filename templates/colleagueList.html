@@ -74,6 +74,8 @@
     </div>
 
     <script>
+
+
         $(document).ready(function () {
             let to_id = "{{ to_id }}";  // Flask에서 전달된 to_id 값
 
@@ -81,11 +83,11 @@
             function loadMemos() {
                 $.ajax({
                     type: "GET",
-                    url: `/memos/${to_id}`,
+                    url: `/memo/memos/${to_id}`,
                     success: function (response) {
                         let memos = response.memos;
                         $("#memoList").empty();
-
+                        console.log(memos)
                         memos.forEach(memo => {
                             let memoCard = `
                                 <div class="col-lg-2 col-md-4 col-sm-6 col-12">
@@ -109,6 +111,7 @@
 
             // ✅ 메모 등록
             $("#sendMemo").click(function () {
+                
                 let nickname = $("#nickname").val() || "익명";  // 기본값 설정
                 let content = $("#content").val();
 
@@ -119,8 +122,11 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/regist/memo",
+                    url: "/memo/regist/memo",
                     contentType: "application/json",
+                    xhrFields: {
+                        withCredentials: true  // 쿠키를 포함하여 요청
+                    },
                     data: JSON.stringify({ to_id, nickname, content }),
                     success: function () {
                         alert("메모가 등록되었습니다!");

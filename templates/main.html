@@ -63,6 +63,7 @@
             height: 150px;  /* 네모의 높이 */
             overflow: hidden;  /* 이미지가 네모 밖으로 나가지 않도록 설정 */
             background-color: #a1deab;
+            cursor: pointer;
         }
         .profile-bottom{
             text-align: center;
@@ -90,7 +91,7 @@
                 <div class="col-lg-2 col-md-4 col-sm-6 col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="profile-image"></div>
+                            <div onclick='goRollingpaper({{ user | tojson}})' class="profile-image"></div>
                             <div class="profile-bottom">
                                 <span>{{user['name']}}</span>
                             </div>
@@ -111,6 +112,16 @@
                 type: "GET",
                 url: "/mypage"
             })
+        }
+
+        function goRollingpaper(user){
+            console.log(user['name'])
+            name = user['name']
+            
+            //console.log(name)
+            window.location.href = `/memo/rollingpaper/${name}`;
+
+            
         }
     </script>
 </body>

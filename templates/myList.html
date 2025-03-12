@@ -82,7 +82,7 @@
             function loadMyMemos() {
                 $.ajax({
                     type: "GET",
-                    url: `/memos/me/${to_id}`,
+                    url: `/mymemo/memos/me/${to_id}`,
                     success: function (response) {
                         let memos = response.memos;
                         $("#memoList").empty();

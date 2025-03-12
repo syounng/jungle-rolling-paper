@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from auth import bp
 from database import db
-from blueprints.collmemo import collmemo_bp  # collmemo Blueprint 가져오기
+from blueprints.collmemo import bp_callmemo  # collmemo Blueprint 가져오기
 from blueprints.mymemo import mymemo_bp #mymemo Blueprint 가져오기
 
 
@@ -17,10 +17,10 @@ jwt = JWTManager(app)
 
 #블루프린트 등록
 app.register_blueprint(bp, url_prefix='/auth')
-app.register_blueprint(collmemo_bp)
-app.register_blueprint(mymemo_bp)
+app.register_blueprint(bp_callmemo, url_prefix='/memo')
+app.register_blueprint(mymemo_bp, url_prefix='/mymemo')
 
-
+#db.memos.insert_one({'from_id': 'kdanny99naver.com@gmail.com', 'to_id':'jkh1447@gmail.com', 'nickname':'adb', 'content': 'ewfeca', 'name': '김대원', 'quiz': 'default'})
 
 @app.route('/')
 def home():
@@ -69,7 +69,7 @@ def join_confirm():
 def mainpage():
 #    token_receive = request.cookies.get('access_token')
    current_user = get_jwt_identity()
-   users = db.users.find()
+   users = db.users.find({}, {'_id':False})
    current_user = db.users.find_one({'id': current_user})['name']
 
    return render_template('main.html', users = users, current_user = current_user)
