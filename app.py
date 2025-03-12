@@ -5,7 +5,7 @@ from auth import bp
 from database import db
 from blueprints.collmemo import bp_callmemo  # collmemo Blueprint 가져오기
 from blueprints.mymemo import mymemo_bp #mymemo Blueprint 가져오기
-
+from blueprints.signup import bp_signup
 
 
 app = Flask(__name__)
@@ -19,6 +19,7 @@ jwt = JWTManager(app)
 app.register_blueprint(bp, url_prefix='/auth')
 app.register_blueprint(bp_callmemo, url_prefix='/memo')
 app.register_blueprint(mymemo_bp, url_prefix='/mymemo')
+app.register_blueprint(bp_signup)
 
 #db.memos.insert_one({'from_id': 'kdanny99naver.com@gmail.com', 'to_id':'jkh1447@gmail.com', 'nickname':'adb', 'content': 'ewfeca', 'name': '김대원', 'quiz': 'default'})
 
