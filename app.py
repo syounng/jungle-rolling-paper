@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify
 from pymongo import MongoClient
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from auth import bp
@@ -20,16 +20,16 @@ def home():
    return render_template('login.html')
 
 
-@app.route('/main', methods=['GET'])
-@jwt_required()
-def main():
-#    token_receive = request.cookies.get('access_token')
 
-    current_user = get_jwt_identity()
-    users = db.users.find()
-    current_user = db.users.find_one({'id': current_user})['name']
-    print(current_user)
-    return render_template('main.html', users = users, current_user = current_user)
+@app.route('/mainpage', methods=['GET'])
+@jwt_required()
+def mainpage():
+#    token_receive = request.cookies.get('access_token')
+   current_user = get_jwt_identity()
+   users = db.users.find()
+   current_user = db.users.find_one({'id': current_user})['name']
+
+   return render_template('main.html', users = users, current_user = current_user)
 
 
 if __name__ == '__main__':  
