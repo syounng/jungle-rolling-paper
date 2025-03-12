@@ -29,6 +29,9 @@
         .sub-title {
             font-size:40px;
         }
+        .sub-title {
+            font-size: 40px;
+        }
         .memo-container {
             background-color: #FFFFFF;
             padding: 20px;
@@ -60,6 +63,7 @@
             font-weight: bold;
             margin-top: 10px;
         }
+
         .title-container {
            width: 100%;
            display: flex;
@@ -73,7 +77,7 @@
            border-radius: 10px;
            position: absolute;
            left: 180px; /* 조금만 오른쪽으로 조정 */
-        }
+
     </style>
 </head>
 <body>
@@ -82,7 +86,9 @@
             <button class="btn btn-light back-btn">←</button>
             <span class="main-title">{{ to_id }} 님의 무기창고</span>
         </div>
-        <span class="sub-title">익명의 정글러가 남긴 메시지를 확인해 보세요 :두_눈:</span>
+        <span class="sub-title">익명의 정글러가 남긴 메시지를 확인해 보세요 👀</span>
+
+        
         <div class="container mt-4">
             <div class="row g-4" id="memoList">
                 <!-- 메모가 동적으로 추가됨 -->
@@ -146,6 +152,7 @@
                                         </div>
                                     </div>`;
                                 $("#memoList").append(memoCard);
+
                             }
                         });
                     },
