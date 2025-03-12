@@ -27,6 +27,42 @@ def home():
    return render_template('login.html')
 
 
+@app.route('/join', methods=['GET'])
+def join():
+   return render_template('join.html')
+
+@app.route('/join', methods=['POST'])
+def join_confirm():
+    
+    name = request.form.get('name')
+    id = request.form.get('id')
+    pw = request.form.get('pw')
+
+    id_is_exists = db.users.find_one({'id': id})
+    print('아이디 중복 찾기 완료')
+    print(id_is_exists)
+
+    if id_is_exists:
+        #아이디 이미 존재
+        return jsonify(result = 'fail', message='같은 아이디가 이미 존재합니다.')
+    
+    #TODO; 비밀번호 해싱
+
+    #사용자 저장
+    new_user = {
+        'name': name,
+        'id': id,
+        'pw': pw,
+        'likes' : 0,
+        'photo' : None
+    }
+
+    db.users.insert_one(new_user)
+
+    # 회원가입 성공 반환
+    return jsonify(result = 'success', message='회원가입이 완료되었습니다.')
+    
+
 
 @app.route('/mainpage', methods=['GET'])
 @jwt_required()
@@ -40,4 +76,4 @@ def mainpage():
 
 
 if __name__ == '__main__':  
-   app.run('0.0.0.0', port=5000, debug=True)
+   app.run('0.0.0.0', port=5001, debug=True)
