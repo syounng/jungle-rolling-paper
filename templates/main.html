@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Gasoek+One&display=swap" rel="stylesheet">
     <title>jungleRollingpaper</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <!-- Bootstrap CSS -->
@@ -75,20 +78,25 @@
         .profile-name {
             font-size: 7px;
         }
+        .bagel-fat-one-regular {
+            font-family: "Bagel Fat One", system-ui;
+            font-weight: 400;
+            font-style: normal;
+        }
 
     </style>
 </head>
 <body>
     <div class="wrap">
         <div class="title">
-            <span class="main-title">🌳정글 306호에 사는 사람들⚔</span>
+            <span class="main-title bagel-fat-one-regular">🌳정글 306호에 사는 사람들⚔</span>
             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
             <div class="profile">
                 <div class="circle" id="mypage" onclick="goMypage()"></div>
                 <div class="name">{{current_user}}</div>
             </div>
         </div>
-        <span class="sub-title">우리는 모두 같은 정글에서 살아남고 있다!</span>
+        <span class="sub-title bagel-fat-one-regular">우리는 모두 같은 정글에서 살아남고 있다!</span>
 
         <div class="container mt-4">
         <div class="row g-5">
@@ -117,10 +125,24 @@
             window.location.href = "/mypage";
         }
 
+
+        
+        
         function goRollingpaper(user){
             console.log(user['name'])
             name = user['name']
             
+
+            // $.ajax({
+            //     url:'/auth/refresh' ,
+            //     type:'GET',
+            //     success: function(response){
+            //         if(response['result'] == 'success'){
+            //             console.log('token refreshed')
+            //         }
+            //     }
+            // })
+
             //console.log(name)
             window.location.href = `/memo/rollingpaper/${name}`;
 
