@@ -97,7 +97,7 @@
                          <input id="pw-check" type="password" placeholder="비밀번호 확인">
                          <i class="pw_eye fa fa-eye-slash"></i> 
                      </div>
-                     <button type="submit" class="login_button" onclick="checkValidation(event); join()">완료</button>
+                     <button id="join-btn" type="submit" class="login_button">완료</button>
                  </form>
          </div> 
      </div>
@@ -126,34 +126,38 @@
          //이름 검증 로직
          if(name == ""){
              alert("이름을 입력해주세요.");
-             return;
+             return false;
          }
  
          //아이디 검증 로직
          let idRegulation = /^[a-z0-9_-]{5,20}$/;
          if(!idRegulation.test(id)) {
              alert("아이디는 5~20자의 영문 소문자, 숫자, 특수기호(_,-)만 사용할 수 있습니다.");
-             return;
+             return false;
          }
  
          // 비밀번호 검증 로직
          if(pw.length < 8 || pw.length > 16){
-             alert("비밀번호는 8자리 ~ 16자리 이내로 입력해주세요.");            
+             alert("비밀번호는 8자리 ~ 16자리 이내로 입력해주세요.");      
+             return false;      
  
          } else if(pw.search(/\s/) != -1){
              alert("비밀번호는 공백 없이 입력해주세요.");
+             return false;
  
          }else if(num < 0 || eng < 0 || spe < 0 ){
              alert("비밀번호는 영문, 숫자, 특수문자를 혼합하여 입력해주세요.");
+             return false;
              
-         }else {
-             // 비밀번호 확인 검증 로직
-             if(pw != pwCheck){
-                 alert("비밀번호가 일치하지 않습니다.")
-             }
-         }
+         }else if(pw != pwCheck){
+            // 비밀번호 확인 검증 로직
+            alert("비밀번호가 일치하지 않습니다.")
+            return false;
+        }
+
+        return true;
+    }
  
-     }
  
      // 비밀번호 보기, 숨기기 기능
      $(document).ready(function(){
@@ -168,6 +172,16 @@
          }
      });
  });
+
+ // 회원가입 버튼 클릭 이벤트 핸들러
+ $("#join-btn").on("click", function (event) {
+        event.preventDefault();  // 폼 기본 제출 방지
+
+        // 유효성 검사를 통과하면 join 함수 실행
+        if (checkValidation()) {
+            join();
+        }
+    });
  
  // 클라이언트의 회원가입 요청 로직
  function join(){
