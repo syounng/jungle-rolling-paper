@@ -9,15 +9,19 @@ from blueprints.signup import bp_signup
 from blueprints.upload import bp_upload
 from bson import ObjectId
 import gridfs
+from flask_cors import CORS
 
 fs = gridfs.GridFS(db)
 app = Flask(__name__)
+CORS(app, supports_credentials=True)  # 쿠키 포함 허용
 
 #secretkey 설정
 app.config['JWT_SECRET_KEY'] = 'secret_key'
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']  # 쿠키에서 토큰을 추출
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 1800 # 15분 (900초)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = 604800  # 7일 (604800초)
+app.config["JWT_COOKIE_SECURE"] = False
+app.config["JWT_COOKIE_NAME"] = "access_token_cookie"
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 jwt = JWTManager(app)
 
@@ -110,7 +114,7 @@ def mypage():
     print('current_user_id: ' + current_user_id)
     user_name = db.users.find_one({'id': current_user_id}, {'_id': False})['name'] # db에서 사용자 이름 가져오기
     print('user_name: ' + user_name)
-    memos_count = db.memos.count_documents({'to_id': current_user_id})
+    memos_count = db.memos.count_documents({'_id': ObjectId(current_user_id)})
     return render_template('myPage.html', user_name=user_name, memos_count=memos_count)
 
 
@@ -139,6 +143,15 @@ def mainpage():
 
    return render_template('main.html', users = users, current_user = current_user)
 
+@app.route('/logout', methods=['POST'])
+def logout():
+    # 로그아웃 시, HttpOnly 쿠키를 만료시키는 방법
+    response = make_response(jsonify(message="Successfully logged out"))
+    
+    # 'access_token'이라는 이름의 쿠키를 삭제 (HttpOnly 쿠키)
+    response.set_cookie('access_token_cookie', '', expires=0, httponly=True, secure=True, samesite='Lax')
+    response.set_cookie('refresh_token_cookie', '', expires=0, httponly=True, secure=True, samesite='Lax')
+    return response
 
 if __name__ == '__main__':  
    app.run('0.0.0.0', port=5001, debug=True)

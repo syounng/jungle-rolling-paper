@@ -91,6 +91,7 @@
             <div class="profile">
                 <img src="/get-profile-picture/{{current_user}}" id="mypage" onclick="goMypage()" style="width: 100px; height: 100px; border-radius: 50%; cursor: pointer;"></img>
                 <div class="name">{{current_user}}</div>
+                <button id="logoutButton">Logout</button>
             </div>
         </div>
         <span class="sub-title bagel-fat-one-regular">우리는 모두 같은 정글에서 살아남고 있다!</span>
@@ -123,7 +124,19 @@
             console.log('고마이페이지');
         }
 
-
+        $('#logoutButton').click(function() {
+            $.ajax({
+                url: '/logout',
+                type: 'POST',
+                success: function(response) {
+                    alert(response.message);  // 로그아웃 성공 메시지
+                    window.location.href = '/';  // 홈 페이지로 리디렉션
+                },
+                error: function(error) {
+                    alert('Error logging out: ' + error.responseJSON.message);
+                }
+            });
+        });
         
         
         function goRollingpaper(user){
