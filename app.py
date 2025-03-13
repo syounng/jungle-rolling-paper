@@ -114,7 +114,7 @@ def mypage():
     print('current_user_id: ' + current_user_id)
     user_name = db.users.find_one({'id': current_user_id}, {'_id': False})['name'] # db에서 사용자 이름 가져오기
     print('user_name: ' + user_name)
-    memos_count = db.memos.count_documents({'_id': ObjectId(current_user_id)})
+    memos_count = db.memos.count_documents({'to_id': current_user_id})
     return render_template('myPage.html', user_name=user_name, memos_count=memos_count)
 
 
