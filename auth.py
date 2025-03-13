@@ -26,8 +26,10 @@ def login():
         print('refresh tocken 발행 완료')
         resp_obj = make_response(jsonify(result = 'success'))
 
-        resp_obj.set_cookie('access_token_cookie', access_token, httponly=True, secure=True, samesite="Lax")
-        resp_obj.set_cookie('refresh_token_cookie', refresh_token, httponly=True, secure=True, samesite="Lax")
+        # resp_obj.set_cookie('access_token_cookie', access_token, httponly=True, secure=False, samesite="None")
+        # resp_obj.set_cookie('refresh_token_cookie', refresh_token, httponly=True, secure=False, samesite="None")
+        set_access_cookies(resp_obj, access_token)
+        set_refresh_cookies(resp_obj, refresh_token)
         print('토큰을 쿠키로 전달 완료')
         
         return resp_obj

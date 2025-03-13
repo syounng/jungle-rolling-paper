@@ -39,6 +39,8 @@ def regist_memo():
         content = data.get("content")
         from_id = from_id  # from_id는 고정된 값
 
+        writer = db.users.find_one({'id': from_id})['name']
+
         # 필수값 체크
         if not to_id or not content:
             return jsonify({"msg": "to_id와 content는 필수 입력 항목입니다."}), 400
@@ -49,7 +51,7 @@ def regist_memo():
             "to_id": to_id,
             "nickname": nickname,
             "content": content,
-            "name": tmp,
+            "name": writer,
             "quiz": 'default',
         })
 

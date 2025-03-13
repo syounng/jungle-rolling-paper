@@ -57,9 +57,20 @@
 <body>
     <script>
         function login(){
+            event.preventDefault();
+            
             console.log('login()')
             id = $('#id').val();
             pwd = $('#pwd').val();
+            
+            if(id == ""){
+                alert('아이디를 입력해 주세요.')
+                return;
+            }else if(pwd == ""){
+                alert('비밀번호를 입력해 주세요.')
+                return;
+            }
+            
             $.ajax({
                 type:"POST",
                 url:"/auth/login",
@@ -70,6 +81,7 @@
                         window.location.href = "/mainpage";
                     }
                     else{
+                        alert('아이디 또는 비밀번호가 잘못되었습니다. 다시 입력해 주세요.')
                         console.log('no token here');
                     }
                 }
