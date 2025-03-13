@@ -21,6 +21,7 @@ def get_memos(to_id):
 
 # ✅ 2. 메모 등록 (JWT 없이 누구나 가능)
 @bp_callmemo.route('/regist/memo', methods=['POST'])
+@jwt_required()
 def regist_memo():
     cookies = request.cookies  # 요청에서 받은 쿠키 확인
     access_token = cookies.get("access_token_cookie")  # 특정 쿠키 값 확인

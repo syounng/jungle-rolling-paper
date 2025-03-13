@@ -18,6 +18,7 @@ app.config['JWT_SECRET_KEY'] = 'secret_key'
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']  # 쿠키에서 토큰을 추출
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 1800 # 15분 (900초)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = 604800  # 7일 (604800초)
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 jwt = JWTManager(app)
 
 #블루프린트 등록

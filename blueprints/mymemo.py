@@ -6,7 +6,6 @@ mymemo_bp = Blueprint('mymemo', __name__)
 @mymemo_bp.route('/memos/me/<to_id>', methods=['GET'])
 @jwt_required()
 def get_my_memos(to_id):
-    """ 현재 로그인한 사용자가 받은 메모 조회 """
     current_user = get_jwt_identity()
     # :흰색_확인_표시: 해당 사용자의 메모 조회
     memos = list(db.memos.find({"to_id": current_user}, {"_id": 1, "nickname": 1, "name": 1, "content": 1, "quiz": 1}))
@@ -14,10 +13,10 @@ def get_my_memos(to_id):
     for memo in memos:
         memo["_id"] = str(memo["_id"])
     return jsonify(memos=memos), 200
+
 @mymemo_bp.route('/rollingpaper/me', methods=['GET'])
 @jwt_required()
 def my_rolling_paper():
-    """ 내가 받은 롤링페이퍼 페이지 """
     current_user = get_jwt_identity()
     user = db.users.find_one({'id': current_user})
     if not user:

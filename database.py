@@ -5,6 +5,4 @@ from pymongo import MongoClient
 #client = MongoClient('mongodb://test:test@13.236.160.185:27017/?authMechanism=DEFAULT')
 client = MongoClient('mongodb://test:test@13.236.160.185:27017/admin')
 
-
-
 db = client.jungle9
